@@ -24,9 +24,6 @@ float vertices[9] = {
 	 0.0,  0.5, 0.0 
 };
 
-std::string vertexShaderSource = rbLib::loadShaderSourceFromFile("assets/vertexShader.vert");
-std::string fragmentShaderSource = rbLib::loadShaderSourceFromFile("assets/fragmentShader.frag");
-
 float triangleColor[3] = { 1.0f, 0.5f, 0.0f };
 float triangleBrightness = 1.0f;
 bool showImGUIDemoWindow = true;
@@ -57,14 +54,10 @@ int main() {
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init();
 
-	unsigned int shader = createShaderProgram(vertexShaderSource.c_str(), fragmentShaderSource.c_str());
-	//rbLib::Shader shader("assets/vertexShader.vert", "assets/fragmentShader.frag");
-	//shader.use();
-	//shader.setFloat("_MyFloat", floatValue);
-	//shader.setVec2("_MyVec2", vec2[0], vec2[1]);
+	rbLib::Shader shader("assets/vertexShader.vert", "assets/fragmentShader.frag");
 	unsigned int vao = createVAO(vertices, 3);
 
-	glUseProgram(shader);
+	shader.use();
 	glBindVertexArray(vao);
 
 	while (!glfwWindowShouldClose(window)) {
@@ -73,8 +66,8 @@ int main() {
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		//Set uniforms
-		glUniform3f(glGetUniformLocation(shader, "_Color"), triangleColor[0], triangleColor[1], triangleColor[2]);
-		glUniform1f(glGetUniformLocation(shader,"_Brightness"), triangleBrightness);
+		shader.setVec3("_Color", triangleColor[0], triangleColor[1], triangleColor[2]);
+		shader.setFloat("_Brightness", triangleBrightness);
 
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
