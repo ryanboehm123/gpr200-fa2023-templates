@@ -9,19 +9,22 @@
 #include <imgui_impl_opengl3.h>
 #include <rb/shader.h>
 
-unsigned int createShader(GLenum shaderType, const char* sourceCode);
-unsigned int createShaderProgram(const char* vertexShaderSource, const char* fragmentShaderSource);
-unsigned int createVAO(float* vertexData, int numVertices);
 void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 
 const int SCREEN_WIDTH = 1080;
 const int SCREEN_HEIGHT = 720;
 
-float vertices[9] = {
-	//x   //y  //z   
-	-0.5, -0.5, 0.0, 
-	 0.5, -0.5, 0.0,
-	 0.0,  0.5, 0.0 
+float vertices[12] = {
+	//x   //y  //z
+	-0.5, -0.5, 0.0, //Bottom Left
+	 0.5, -0.5, 0.0, //Bottom Right
+	 0.5,  0.5, 0.0, //Top Right
+	-0.5,  0.5, 0.0  //Top Left
+};
+
+unsigned int indices[6] = {
+	0, 3, 2, //Triangle 1
+	2, 0, 1  //Triangle 2
 };
 
 float triangleColor[3] = { 1.0f, 0.5f, 0.0f };
@@ -55,7 +58,7 @@ int main() {
 	ImGui_ImplOpenGL3_Init();
 
 	rbLib::Shader shader("assets/vertexShader.vert", "assets/fragmentShader.frag");
-	unsigned int vao = createVAO(vertices, 3);
+	unsigned int vao = rbLib::createVAO(vertices, 12, indices, 6);
 
 	shader.use();
 	glBindVertexArray(vao);
@@ -69,7 +72,7 @@ int main() {
 		shader.setVec3("_Color", triangleColor[0], triangleColor[1], triangleColor[2]);
 		shader.setFloat("_Brightness", triangleBrightness);
 
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
 
 		//Render UI
 		{
@@ -93,25 +96,6 @@ int main() {
 		glfwSwapBuffers(window);
 	}
 	printf("Shutting down...");
-}
-
-unsigned int createVAO(float* vertexData, int numVertices) {
-	unsigned int vao;
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-
-	//Define a new buffer id
-	unsigned int vbo;
-	glGenBuffers(1, &vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	//Allocate space for + send vertex data to GPU.
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * numVertices * 3, vertexData, GL_STATIC_DRAW);
-
-	//Position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (const void*)0);
-	glEnableVertexAttribArray(0);
-
-	return vao;
 }
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height)
