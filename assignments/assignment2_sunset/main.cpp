@@ -14,12 +14,12 @@ void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 const int SCREEN_WIDTH = 1080;
 const int SCREEN_HEIGHT = 720;
 
-float vertices[12] = {
-	//x   //y  //z
-	-0.5, -0.5, 0.0, //Bottom Left
-	 0.5, -0.5, 0.0, //Bottom Right
-	 0.5,  0.5, 0.0, //Top Right
-	-0.5,  0.5, 0.0  //Top Left
+rbLib::Vertex vertices[12] = {
+	//x   //y   //z  //u  //v
+   {-0.5, -0.5, 0.0, 0.0, 0.0}, //Bottom Left
+   { 0.5, -0.5, 0.0, 1.0, 0.0}, //Bottom Right
+   { 0.5,  0.5, 0.0, 1.0, 1.0}, //Top Right
+   {-0.5,  0.5, 0.0, 0.0, 1.0}  //Top Left
 };
 
 unsigned int indices[6] = {
