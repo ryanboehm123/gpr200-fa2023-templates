@@ -83,6 +83,32 @@ int main() {
 	//Make sampler2D _NoiseTexture sample from unit 1
 	shader.setInt("_NoiseTexture", 1);
 
+	//Create a different shader for background vs character
+	ew::Shader backgroundShader("assets/background.vert", "assets/background.frag");
+	ew::Shader characterShader("assets/character.vert", "assets/character.frag");
+
+	//render loop (pseudocode)
+	{
+		clear();
+		bindQuadVAO(); //Both use same quad mesh
+
+		//Draw background
+		backgroundShader.use();
+		bindBackgroundTextures();
+		setBackgroundShaderUniforms();
+		drawQuad();
+
+		//Draw character
+		characterShader.use();
+		bindCharacterTextures();
+		setCharacterShaderUniforms();
+		drawQuad();
+
+		drawUI();
+		swapBuffers();
+
+	}
+
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
 		glClearColor(0.3f, 0.4f, 0.9f, 1.0f);
