@@ -9,6 +9,8 @@
 #include <imgui_impl_opengl3.h>
 
 #include <ew/shader.h>
+#include <rb/texture.h>
+#include <rb/shader.h>
 
 struct Vertex {
 	float x, y, z;
@@ -63,6 +65,23 @@ int main() {
 	unsigned int quadVAO = createVAO(vertices, 4, indices, 6);
 
 	glBindVertexArray(quadVAO);
+
+	unsigned int textureA = loadTexture("assets/bricks.jpg", GL_REPEAT, GL_LINEAR);
+	unsigned int textureB = loadTexture("assets/noise.png", GL_REPEAT, GL_LINEAR);
+
+	//Place textureA in unit 0
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, textureA);
+	//Place textureB in unit 1
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, textureB);
+
+	//Must be using this shader when setting uniforms
+	shader.use();
+	//Make sampler2D _BrickTexture sample from unit 0
+	shader.setInt("_BrickTexture", 0);
+	//Make sampler2D _NoiseTexture sample from unit 1
+	shader.setInt("_NoiseTexture", 1);
 
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();

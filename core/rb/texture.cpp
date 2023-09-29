@@ -1,7 +1,7 @@
 //texture.cpp
 #include "texture.h"
 #include "../ew/external/stb_image.h"
-#include "..ew/external/glad.h"
+#include "../ew/external/glad.h"
 
 unsigned int loadTexture(const char* filePath, int wrapMode, int filterMode) {
 	stbi_set_flip_vertically_on_load(true);
