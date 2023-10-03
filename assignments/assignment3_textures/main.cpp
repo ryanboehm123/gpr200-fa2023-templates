@@ -66,15 +66,16 @@ int main() {
 
 	glBindVertexArray(quadVAO);
 
-	unsigned int textureA = loadTexture("assets/bricks.jpg", GL_REPEAT, GL_LINEAR);
-	unsigned int textureB = loadTexture("assets/noise.png", GL_REPEAT, GL_LINEAR);
+	unsigned int background = loadTexture("assets/bricks.jpg", GL_REPEAT, GL_LINEAR);
+	unsigned int character = loadTexture("assets/character.png", GL_REPEAT, GL_LINEAR);
 
-	//Place textureA in unit 0
+	//Place background in unit 0
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, textureA);
+	glBindTexture(GL_TEXTURE_2D, background);
+
 	//Place textureB in unit 1
 	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, textureB);
+	glBindTexture(GL_TEXTURE_2D, character);
 
 	//Must be using this shader when setting uniforms
 	shader.use();
@@ -84,30 +85,8 @@ int main() {
 	shader.setInt("_NoiseTexture", 1);
 
 	//Create a different shader for background vs character
-	ew::Shader backgroundShader("assets/background.vert", "assets/background.frag");
-	ew::Shader characterShader("assets/character.vert", "assets/character.frag");
-
-	//render loop (pseudocode)
-	{
-		clear();
-		bindQuadVAO(); //Both use same quad mesh
-
-		//Draw background
-		backgroundShader.use();
-		bindBackgroundTextures();
-		setBackgroundShaderUniforms();
-		drawQuad();
-
-		//Draw character
-		characterShader.use();
-		bindCharacterTextures();
-		setCharacterShaderUniforms();
-		drawQuad();
-
-		drawUI();
-		swapBuffers();
-
-	}
+	ew::Shader backgroundShader("assets/vertexShader.vert", "assets/fragmentShader.frag");
+	ew::Shader characterShader("assets/vertexShader.vert", "assets/fragmentShader.frag");
 
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
@@ -115,12 +94,27 @@ int main() {
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		//Set uniforms
-		shader.use();
+		//shader.use();
 
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, NULL);
+		characterShader.use();
+
+		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, NULL);
+
+		glEnable(GL_BLEND);
+
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		//Render UI
 		{
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			glBindVertexArray(quadVAO);
+
+			backgroundShader.use();
+			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+
+			characterShader.use();
+			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+
 			ImGui_ImplGlfw_NewFrame();
 			ImGui_ImplOpenGL3_NewFrame();
 			ImGui::NewFrame();
