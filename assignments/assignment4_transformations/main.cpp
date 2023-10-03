@@ -12,6 +12,9 @@
 #include <ew/ewMath/vec3.h>
 #include <ew/procGen.h>
 
+#include <rb/shader.h>
+#include <rb/transformations.h>
+
 void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 
 //Square aspect ratio for now. We will account for this with projection later.
@@ -55,6 +58,8 @@ int main() {
 	
 	//Cube mesh
 	ew::Mesh cubeMesh(ew::createCube(0.5f));
+
+	rbLib::Transform cubeTransform;
 	
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
@@ -64,8 +69,7 @@ int main() {
 
 		//Set uniforms
 		shader.use();
-
-		//TODO: Set model matrix uniform
+		shader.setMat4("_Model", cubeTransform.getModelMatrix());
 
 		cubeMesh.draw();
 
@@ -76,6 +80,9 @@ int main() {
 			ImGui::NewFrame();
 
 			ImGui::Begin("Transform");
+			ImGui::DragFloat3("Position", &cubeTransform.position.x, 0.05f);
+			ImGui::DragFloat3("Rotation", &cubeTransform.rotation.x, 1.0f);
+			ImGui::DragFloat3("Scale", &cubeTransform.scale.x, 0.05f);
 			ImGui::End();
 
 			ImGui::Render();
