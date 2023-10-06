@@ -21,6 +21,9 @@ void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 const int SCREEN_WIDTH = 720;
 const int SCREEN_HEIGHT = 720;
 
+//Number of cubes in our world space
+const int NUM_CUBES = 4;
+
 int main() {
 	printf("Initializing...");
 	if (!glfwInit()) {
@@ -59,8 +62,17 @@ int main() {
 	//Cube mesh
 	ew::Mesh cubeMesh(ew::createCube(0.5f));
 
-	rbLib::Transform cubeTransform;
-	
+	rbLib::Transform cubeTransforms[NUM_CUBES];
+
+	cubeTransforms[0].position.x = 0.5;
+	cubeTransforms[0].position.y = 0.5;
+	cubeTransforms[1].position.x = -0.5;
+	cubeTransforms[1].position.y = 0.5;
+	cubeTransforms[2].position.x = -0.5;
+	cubeTransforms[2].position.y = -0.5;
+	cubeTransforms[3].position.x = 0.5;
+	cubeTransforms[3].position.y = -0.5;
+
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
 		glClearColor(0.3f, 0.4f, 0.9f, 1.0f);
@@ -69,9 +81,10 @@ int main() {
 
 		//Set uniforms
 		shader.use();
-		shader.setMat4("_Model", cubeTransform.getModelMatrix());
-
-		cubeMesh.draw();
+		for (size_t i = 0; i < NUM_CUBES; i++) {
+			shader.setMat4("_Model", cubeTransforms[i].getModelMatrix());
+			cubeMesh.draw();
+		}
 
 		//Render UI
 		{
@@ -79,11 +92,15 @@ int main() {
 			ImGui_ImplOpenGL3_NewFrame();
 			ImGui::NewFrame();
 
-			ImGui::Begin("Transform");
-			ImGui::DragFloat3("Position", &cubeTransform.position.x, 0.05f);
-			ImGui::DragFloat3("Rotation", &cubeTransform.rotation.x, 1.0f);
-			ImGui::DragFloat3("Scale", &cubeTransform.scale.x, 0.05f);
-			ImGui::End();
+			for (size_t j = 0; j < NUM_CUBES; j++) {
+				ImGui::PushID(j);
+				if (ImGui::CollapsingHeader("Transform")) {
+					ImGui::DragFloat3("Position", &cubeTransforms[j].position.x, 0.05f);
+					ImGui::DragFloat3("Rotation", &cubeTransforms[j].rotation.x, 1.0f);
+					ImGui::DragFloat3("Scale", &cubeTransforms[j].scale.x, 0.05f);
+				}
+				ImGui::PopID();
+			}
 
 			ImGui::Render();
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
