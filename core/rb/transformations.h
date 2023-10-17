@@ -72,9 +72,9 @@ namespace rbLib {
 	inline ew::Mat4 LookAt(ew::Vec3 eye, ew::Vec3 target, ew::Vec3 up) {
 		//p = eye
 		//e = target
-		ew::Vec3 f = ew::Normalize(target) - ew::Normalize(eye) / ew::Magnitude(ew::Normalize(target) - ew::Normalize(eye));
-		ew::Vec3 r = ew::Cross(ew::Normalize(up), ew::Normalize(f)) / ew::Magnitude(ew::Cross(ew::Normalize(up), ew::Normalize(f)));
-		ew::Vec3 u = ew::Cross(ew::Normalize(f), ew::Normalize(r)) / ew::Magnitude(ew::Cross(ew::Normalize(f), ew::Normalize(r)));
+		ew::Vec3 f = ew::Normalize(target - eye);
+		ew::Vec3 r = ew::Normalize(ew::Cross(up, f));
+		ew::Vec3 u = ew::Normalize(ew::Cross(f, r));
 		return ew::Mat4(
 			r.x, r.y, r.z, -(ew::Dot(r, target)),
 			u.x, u.y, u.z, -(ew::Dot(u, target)),
@@ -100,11 +100,12 @@ namespace rbLib {
 	//Perspective projection
 	//fov = vertical aspect ratio (radians)
 	inline ew::Mat4 Perspective(float fov, float aspect, float near, float far) {
+		float radFOV = ew::Radians(fov);
 		return ew::Mat4(
-			1/(tan(fov/2)*aspect),              0,                     0,                               0,
-			                    0, 1/(tan(fov/2)),                     0,                               0,
-			                    0,              0, (near+far)/(near-far), (2 * far * near) / (near - far),
-			                    0,              0,                    -1,                               0
+			1/(tan(radFOV/2)*aspect),                 0,                     0,                               0,
+			                       0, 1/(tan(radFOV/2)),                     0,                               0,
+			                       0,                 0, (near+far)/(near-far), (2 * far * near) / (near - far),
+			                       0,                 0,                    -1,                               0
 		);
 	};
 

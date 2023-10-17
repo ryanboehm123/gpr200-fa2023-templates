@@ -12,6 +12,9 @@
 #include <ew/procGen.h>
 #include <ew/transform.h>
 
+#include <rb/camera.h>
+#include <rb/transformations.h>
+
 void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 
 //Projection will account for aspect ratio!
@@ -20,6 +23,7 @@ const int SCREEN_HEIGHT = 720;
 
 const int NUM_CUBES = 4;
 ew::Transform cubeTransforms[NUM_CUBES];
+rbLib::Camera camera;
 
 int main() {
 	printf("Initializing...");
@@ -74,6 +78,8 @@ int main() {
 
 		//Set uniforms
 		shader.use();
+		shader.setMat4("_View", camera.ViewMatrix());
+		shader.setMat4("_Projection", camera.ProjectionMatrix());
 
 		//TODO: Set model matrix uniform
 		for (size_t i = 0; i < NUM_CUBES; i++)
@@ -90,6 +96,14 @@ int main() {
 			ImGui::NewFrame();
 
 			ImGui::Begin("Settings");
+			ImGui::DragFloat3("Position", &camera.position.x, 0.05f);
+			ImGui::DragFloat3("Target", &camera.target.x, 0.05f);
+			ImGui::Checkbox("Orthographic", &camera.orthographic);
+			ImGui::DragFloat("Ortho Height", &camera.orthoSize);
+			ImGui::SliderFloat("FOV", &camera.fov, 0.00f, 180.00f);
+			ImGui::DragFloat("Near Plane", &camera.nearPlane);
+			ImGui::DragFloat("Far Plane", &camera.farPlane);
+			/*
 			ImGui::Text("Cubes");
 			for (size_t i = 0; i < NUM_CUBES; i++)
 			{
@@ -102,6 +116,7 @@ int main() {
 				ImGui::PopID();
 			}
 			ImGui::Text("Camera");
+			*/
 			ImGui::End();
 			
 			ImGui::Render();
