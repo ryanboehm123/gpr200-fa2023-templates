@@ -8,7 +8,7 @@ namespace rbLib {
 		target = { 0, 0, 0 };
 		fov = 60;
 		aspectRatio = 1.5;
-		nearPlane = -1.0;
+		nearPlane = 0.1;
 		farPlane = 100;
 		orthographic = true;
 		orthoSize = 6;
