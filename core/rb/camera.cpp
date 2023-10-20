@@ -7,10 +7,10 @@ namespace rbLib {
 		position = { 0, 0, 5 };
 		target = { 0, 0, 0 };
 		fov = 60;
-		aspectRatio = 1.5;
-		nearPlane = 0.1;
+		aspectRatio = 1.5f;
+		nearPlane = 0.1f;
 		farPlane = 100;
-		orthographic = true;
+		orthographic = false;
 		orthoSize = 6;
 	}
 
