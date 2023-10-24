@@ -5,6 +5,8 @@ namespace rbLib {
 	ew::MeshData createSphere(float radius, int numSegments) {
 		float thetaStep = 2 * ew::PI / numSegments;
 		float phiStep = ew::PI / numSegments;
+		std::vertex<ew::Vertex> vertices;
+		std::vertex<unsigned int> indices;
 		ew::Vec3 v;
 
 		for (int row = 0; row <= numSegments; row++) {
@@ -14,9 +16,32 @@ namespace rbLib {
 				v.x = radius * sin(phi) * sin(theta);
 				v.y = radius * cos(phi);
 				v.z = radius * sin(phi) * cos(theta);
-				//vertices.push_back(v);
+				vertices.push_back(v);
 			}
 		}
+
+		int poleStart = ?;//Index of first pole vertex
+		int sideStart = numSegments + 1;
+		for (size_t i = 0; i < numSegments; i++) {
+			indices.push_back(sideStart + i);
+			indices.push_back(poleStart + i); // Pole
+			indices.push_back(sideStart + i + 1);
+		}
+
+		int columns = numSegments + 1;
+		//Skip top and bottom poles
+		for (int row = 1; row < numSegments - 1; row++) {
+			for (int col = 0; col < numSegments; col++) {
+				int start = row * columns + col;
+				//Triangle 1
+				indices.push_back(start);
+				indices.push_back(start + 1);
+				indices.push_back(start + columns);
+				//Triangle 2
+				//CONTINUE
+			}
+		}
+
 	}
 
 	ew::MeshData createCylinder(float height, float radius, int numSegments) {
@@ -38,7 +63,7 @@ namespace rbLib {
 
 		thetaStep = 2 * ew::PI / numSegments
 		for(i = 0; i <= numSegments; i++) {
-			theta = i * thetaStepl
+			theta = i * thetaStep;
 			v.x = cos(theta) * radius;
 			v.z = sin(theta) * radius;
 			v.y = topY; // or bottomY
