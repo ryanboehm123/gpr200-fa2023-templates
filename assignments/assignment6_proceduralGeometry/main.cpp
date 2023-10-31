@@ -15,6 +15,8 @@
 #include <ew/camera.h>
 #include <ew/cameraController.h>
 
+#include <rb/procGen.h>
+
 void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 void resetCamera(ew::Camera& camera, ew::CameraController& cameraController);
 
@@ -82,8 +84,21 @@ int main() {
 	ew::MeshData cubeMeshData = ew::createCube(0.5f);
 	ew::Mesh cubeMesh(cubeMeshData);
 
+	//Create plane
+	ew::MeshData planeMeshData = rbLib::createPlane(5, 5, 5);
+	ew::Mesh planeMesh(planeMeshData);
+
+	//Create cylinder
+	ew::MeshData cylinderMeshData = rbLib::createCylinder(5, 2, 8);
+	ew::Mesh cylinderMesh(cylinderMeshData);
+
 	//Initialize transforms
 	ew::Transform cubeTransform;
+	ew::Transform planeTransform;
+	ew::Transform cylinderTransform;
+
+	planeTransform.position = ew::Vec3(1.0f, 0.0f, 0.0f);
+	cylinderTransform.position = ew::Vec3(20.0f, 10.0f, 20.0f);
 
 	resetCamera(camera,cameraController);
 
@@ -120,6 +135,12 @@ int main() {
 		//Draw cube
 		shader.setMat4("_Model", cubeTransform.getModelMatrix());
 		cubeMesh.draw((ew::DrawMode)appSettings.drawAsPoints);
+
+		shader.setMat4("_Model", planeTransform.getModelMatrix());
+		planeMesh.draw((ew::DrawMode)appSettings.drawAsPoints);
+
+		shader.setMat4("_Model", cylinderTransform.getModelMatrix());
+		cylinderMesh.draw((ew::DrawMode)appSettings.drawAsPoints);
 
 		//Render UI
 		{
