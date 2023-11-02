@@ -92,13 +92,19 @@ int main() {
 	ew::MeshData cylinderMeshData = rbLib::createCylinder(5, 2, 8);
 	ew::Mesh cylinderMesh(cylinderMeshData);
 
+	//Create sphere
+	ew::MeshData sphereMeshData = rbLib::createSphere(5, 32);
+	ew::Mesh sphereMesh(sphereMeshData);
+
 	//Initialize transforms
 	ew::Transform cubeTransform;
 	ew::Transform planeTransform;
 	ew::Transform cylinderTransform;
+	ew::Transform sphereTransform;
 
-	planeTransform.position = ew::Vec3(1.0f, 0.0f, 0.0f);
-	cylinderTransform.position = ew::Vec3(20.0f, 10.0f, 20.0f);
+	planeTransform.position = ew::Vec3(1.0f, -2.0f, 0.0f);
+	cylinderTransform.position = ew::Vec3(10.0f, 0.0f, 0.0f);
+	sphereTransform.position = ew::Vec3(20.0f, 0.0f, 0.0f);
 
 	resetCamera(camera,cameraController);
 
@@ -141,6 +147,9 @@ int main() {
 
 		shader.setMat4("_Model", cylinderTransform.getModelMatrix());
 		cylinderMesh.draw((ew::DrawMode)appSettings.drawAsPoints);
+
+		shader.setMat4("_Model", sphereTransform.getModelMatrix());
+		sphereMesh.draw((ew::DrawMode)appSettings.drawAsPoints);
 
 		//Render UI
 		{

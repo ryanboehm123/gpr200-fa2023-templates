@@ -2,45 +2,62 @@
 #include "procGen.h"
 
 namespace rbLib {
-	//ew::MeshData createSphere(float radius, int numSegments) {
-	//	float thetaStep = 2 * ew::PI / numSegments;
-	//	float phiStep = ew::PI / numSegments;
-	//	ew::MeshData data;
+	ew::MeshData createSphere(float radius, int numSegments) {
+		float thetaStep = 2 * ew::PI / numSegments;
+		float phiStep = ew::PI / numSegments;
+		ew::MeshData data;
+		ew::Vertex v;
 
-	//	for (int row = 0; row <= numSegments; row++) {
-	//		float phi = row * phiStep;
-	//		for (int col = 0; col <= numSegments; col++) {
-	//			float theta = col * thetaStep;
-	//			data.vertices.pos.x = radius * sin(phi) * cos(theta);
-	//			data.vertices.pos.y = radius * cos(phi);
-	//			data.vertices.pos.z = radius * sin(phi) * sin(theta);
-	//			vertices.push_back(v);
-	//		}
-	//	}
+		//Vertexes
+		for (int row = 0; row <= numSegments; row++) {
+			//First and last row converge at poles
+			float phi = row * phiStep;
+			for (int col = 0; col <= numSegments; col++) { //Duplicate column for each row
+				float theta = col * thetaStep;
+				v.pos.x = radius * sin(phi) * cos(theta);
+				v.pos.y = radius * cos(phi);
+				v.pos.z = radius * sin(phi) * sin(theta);
+				data.vertices.push_back(v);
+			}
+		}
 
-	//	int poleStart = ?;//Index of first pole vertex
-	//	int sideStart = numSegments + 1;
-	//	for (size_t i = 0; i < numSegments; i++) {
-	//		indices.push_back(sideStart + i);
-	//		indices.push_back(poleStart + i); // Pole
-	//		indices.push_back(sideStart + i + 1);
-	//	}
+		//Indices
+		//Top Face
+		int poleStart = 0; //Index of first pole vertex
+		int sideStart = numSegments + 1;
+		for (size_t i = 0; i < numSegments; i++) {
+			data.indices.push_back(sideStart + i);
+			data.indices.push_back(poleStart + i); // Pole
+			data.indices.push_back(sideStart + i + 1);
+		}
 
-	//	int columns = numSegments + 1;
-	//	//Skip top and bottom poles
-	//	for (int row = 1; row < numSegments - 1; row++) {
-	//		for (int col = 0; col < numSegments; col++) {
-	//			int start = row * columns + col;
-	//			//Triangle 1
-	//			indices.push_back(start);
-	//			indices.push_back(start + 1);
-	//			indices.push_back(start + columns);
-	//			//Triangle 2
-	//			//CONTINUE
-	//		}
-	//	}
+		//Bottom Face
+		poleStart = data.vertices.size() - 1; //Index of first pole vertex
+		sideStart = poleStart - numSegments;
+		for (size_t i = 0; i < numSegments; i++) {
+			data.indices.push_back(sideStart + i);
+			data.indices.push_back(poleStart + i); // Pole
+			data.indices.push_back(sideStart + i + 1);
+		}
 
-	//}
+		int columns = numSegments + 1;
+		//Skip top and bottom poles
+		for (int row = 1; row < numSegments - 1; row++) {
+			for (int col = 0; col < numSegments; col++) {
+				int start = row * columns + col;
+				//Triangle 1
+				data.indices.push_back(start);
+				data.indices.push_back(start + 1);
+				data.indices.push_back(start + columns);
+				//Triangle 2
+				data.indices.push_back(start + columns);
+				data.indices.push_back(start + 1);
+				data.indices.push_back(start + columns + 1);
+			}
+		}
+
+		return data;
+	}
 
 	ew::MeshData createCylinder(float height, float radius, int numSegments) {
 		ew::MeshData data;
@@ -100,17 +117,8 @@ namespace rbLib {
 			data.indices.push_back(center);
 			data.indices.push_back(start + i + 1);
 		}
-		
-		//Bottom face
-		start = data.vertices.size() / 2;
-		center = data.vertices.size() - 1;
 
-		for (int i = 0; i <= numSegments; i++) {
-			data.indices.push_back(start + i);
-			data.indices.push_back(center);
-			data.indices.push_back(start + i + 1);
-		}
-
+		//Side
 		int sideStart = 1;
 		int columns = numSegments + 1;
 
@@ -124,6 +132,16 @@ namespace rbLib {
 			data.indices.push_back(start + 1);
 			data.indices.push_back(start + columns + 1);
 			data.indices.push_back(start + columns);
+		}
+
+		//Bottom face
+		start = data.vertices.size() / 2;
+		center = data.vertices.size() - 1;
+
+		for (int i = 0; i <= numSegments; i++) {
+			data.indices.push_back(start + i);
+			data.indices.push_back(center);
+			data.indices.push_back(start + i + 1);
 		}
 
 		return data;
