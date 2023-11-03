@@ -176,16 +176,14 @@ namespace rbLib {
 	ew::MeshData createPlane(float width, float height, int subdivisions) {
 		ew::MeshData data;
 		ew::Vertex v;
-		v.normal.x = 0;
-		v.normal.y = 1;
-		v.normal.z = 0;
+		v.normal = { 0,1,0 };
 
 		for (float row = 0; row <= subdivisions; row++) {
 			for (float col = 0; col <= subdivisions; col++) {
 				v.pos.x = width * (col/subdivisions);
 				v.pos.z = -height * (row/subdivisions);
-				/*v.uv.x = col / width;
-				v.uv.y = row / height;*/
+				v.uv.x = col / width;
+				v.uv.y = row / height;
 				data.vertices.push_back(v);
 			}
 		}
