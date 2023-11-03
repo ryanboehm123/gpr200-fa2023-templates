@@ -17,6 +17,7 @@ namespace rbLib {
 				v.pos.x = radius * sin(phi) * cos(theta);
 				v.pos.y = radius * cos(phi);
 				v.pos.z = radius * sin(phi) * sin(theta);
+				v.normal = ew::Normalize(v.pos - ew::Vec3{0, 1, 0});
 				data.vertices.push_back(v);
 			}
 		}
@@ -31,6 +32,7 @@ namespace rbLib {
 			data.indices.push_back(sideStart + i + 1);
 		}
 
+		//Side
 		int columns = numSegments + 1;
 		//Skip top and bottom poles
 		for (int row = 1; row < numSegments - 1; row++) {
@@ -143,7 +145,7 @@ namespace rbLib {
 		}
 
 		//Side
-		int sideStart = numSegments + 2;
+		int sideStart = numSegments + 1;
 		int columns = numSegments + 2;
 
 		for(int i = 0; i < columns; i++) {
