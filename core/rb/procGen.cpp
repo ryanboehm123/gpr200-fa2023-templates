@@ -73,7 +73,7 @@ namespace rbLib {
 		//v.uv = { 0, 1 };
 		data.vertices.push_back(v);
 
-		//Top ring (upward facing)
+		//Top ring (top face)
 		for (int i = 0; i <= numSegments; i++) {
 			float theta = i * thetaStep;
 			v.pos.x = cos(theta) * radius;
@@ -85,7 +85,7 @@ namespace rbLib {
 			data.vertices.push_back(v);
 		}
 
-		//Top ring (side facing)
+		//Top ring (side face)
 		for (int i = 0; i <= numSegments; i++) {
 			float theta = i * thetaStep;
 			v.pos.x = cos(theta) * radius;
@@ -99,19 +99,7 @@ namespace rbLib {
 			data.vertices.push_back(v);
 		}
 
-		//Bottom ring (upward facing)
-		for (int i = 0; i <= numSegments; i++) {
-			float theta = i * thetaStep;
-			v.pos.x = cos(theta) * radius;
-			v.pos.z = sin(theta) * radius;
-			v.pos.y = bottomY;
-			v.normal = { 0, 1, 0 };
-			//v.uv.x = cos(theta) / thetaStep;
-			//v.uv.y = sin(theta) / thetaStep;
-			data.vertices.push_back(v);
-		}
-
-		//Bottom ring (side facing)
+		//Bottom ring (side face)
 		for (int i = 0; i <= numSegments; i++) {
 			float theta = i * thetaStep;
 			v.pos.x = cos(theta) * radius;
@@ -120,6 +108,18 @@ namespace rbLib {
 			v.normal.x = cos(theta);
 			v.normal.y = 0;
 			v.normal.z = sin(theta);
+			//v.uv.x = cos(theta) / thetaStep;
+			//v.uv.y = sin(theta) / thetaStep;
+			data.vertices.push_back(v);
+		}
+
+		//Bottom ring (bottom face)
+		for (int i = 0; i <= numSegments; i++) {
+			float theta = i * thetaStep;
+			v.pos.x = cos(theta) * radius;
+			v.pos.z = sin(theta) * radius;
+			v.pos.y = bottomY;
+			v.normal = { 0, -1, 0 };
 			//v.uv.x = cos(theta) / thetaStep;
 			//v.uv.y = sin(theta) / thetaStep;
 			data.vertices.push_back(v);
@@ -127,8 +127,8 @@ namespace rbLib {
 
 		//Bottom center
 		v.pos = { 0,bottomY,0 };
-		v.normal = { 0, 1, 0 };
-		v.uv = { 0, 1 };
+		v.normal = { 0, -1, 0 };
+		//v.uv = { 0, 1 };
 		data.vertices.push_back(v);
 
 		//Indices
@@ -144,7 +144,7 @@ namespace rbLib {
 
 		//Side
 		int sideStart = numSegments + 2;
-		int columns = 2 * numSegments + 2;
+		int columns = numSegments + 2;
 
 		for(int i = 0; i < columns; i++) {
 			start = sideStart + i;
@@ -159,7 +159,7 @@ namespace rbLib {
 		}
 
 		//Bottom face
-		start = data.vertices.size() / 2;
+		start = data.vertices.size() / 2 + data.vertices.size() / 4;
 		center = data.vertices.size() - 1;
 
 		for (int i = 0; i <= numSegments; i++) {
