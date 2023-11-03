@@ -69,42 +69,66 @@ namespace rbLib {
 
 		//Top center
 		v.pos = {0,topY,0};
-		/*v.normal = { 1, 1, 0 };
-		v.uv = { 0, 1 };*/
+		v.normal = { 0, 1, 0 };
+		//v.uv = { 0, 1 };
 		data.vertices.push_back(v);
 
-		//Top ring
+		//Top ring (upward facing)
 		for (int i = 0; i <= numSegments; i++) {
 			float theta = i * thetaStep;
 			v.pos.x = cos(theta) * radius;
 			v.pos.z = sin(theta) * radius;
 			v.pos.y = topY;
-			/*v.normal.x = cos(theta);
-			v.normal.y = 1;
-			v.normal.z = sin(theta);
-			v.uv.x = cos(theta) / thetaStep;
-			v.uv.y = sin(theta) / thetaStep;*/
+			v.normal = { 0, 1, 0 };
+			//v.uv.x = cos(theta) / thetaStep;
+			//v.uv.y = sin(theta) / thetaStep;
 			data.vertices.push_back(v);
 		}
 
-		//Bottom ring
+		//Top ring (side facing)
+		for (int i = 0; i <= numSegments; i++) {
+			float theta = i * thetaStep;
+			v.pos.x = cos(theta) * radius;
+			v.pos.z = sin(theta) * radius;
+			v.pos.y = topY;
+			v.normal.x = cos(theta);
+			v.normal.y = 0;
+			v.normal.z = sin(theta);
+			//v.uv.x = cos(theta) / thetaStep;
+			//v.uv.y = sin(theta) / thetaStep;
+			data.vertices.push_back(v);
+		}
+
+		//Bottom ring (upward facing)
 		for (int i = 0; i <= numSegments; i++) {
 			float theta = i * thetaStep;
 			v.pos.x = cos(theta) * radius;
 			v.pos.z = sin(theta) * radius;
 			v.pos.y = bottomY;
-			/*v.normal.x = cos(theta);
-			v.normal.y = 1;
+			v.normal = { 0, 1, 0 };
+			//v.uv.x = cos(theta) / thetaStep;
+			//v.uv.y = sin(theta) / thetaStep;
+			data.vertices.push_back(v);
+		}
+
+		//Bottom ring (side facing)
+		for (int i = 0; i <= numSegments; i++) {
+			float theta = i * thetaStep;
+			v.pos.x = cos(theta) * radius;
+			v.pos.z = sin(theta) * radius;
+			v.pos.y = bottomY;
+			v.normal.x = cos(theta);
+			v.normal.y = 0;
 			v.normal.z = sin(theta);
-			v.uv.x = cos(theta) / thetaStep;
-			v.uv.y = sin(theta) / thetaStep;*/
+			//v.uv.x = cos(theta) / thetaStep;
+			//v.uv.y = sin(theta) / thetaStep;
 			data.vertices.push_back(v);
 		}
 
 		//Bottom center
 		v.pos = { 0,bottomY,0 };
-		/*v.normal = { 1, 1, 0 };
-		v.uv = { 0, 1 };*/
+		v.normal = { 0, 1, 0 };
+		v.uv = { 0, 1 };
 		data.vertices.push_back(v);
 
 		//Indices
@@ -119,8 +143,8 @@ namespace rbLib {
 		}
 
 		//Side
-		int sideStart = 1;
-		int columns = numSegments + 1;
+		int sideStart = numSegments + 2;
+		int columns = 2 * numSegments + 2;
 
 		for(int i = 0; i < columns; i++) {
 			start = sideStart + i;
@@ -150,9 +174,9 @@ namespace rbLib {
 	ew::MeshData createPlane(float width, float height, int subdivisions) {
 		ew::MeshData data;
 		ew::Vertex v;
-		/*v.normal.x = 0;
+		v.normal.x = 0;
 		v.normal.y = 1;
-		v.normal.z = 0;*/
+		v.normal.z = 0;
 
 		for (float row = 0; row <= subdivisions; row++) {
 			for (float col = 0; col <= subdivisions; col++) {
