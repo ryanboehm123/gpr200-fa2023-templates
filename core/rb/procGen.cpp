@@ -31,15 +31,6 @@ namespace rbLib {
 			data.indices.push_back(sideStart + i + 1);
 		}
 
-		//Bottom Face
-		poleStart = data.vertices.size() - 1; //Index of first pole vertex
-		sideStart = poleStart - numSegments;
-		for (size_t i = 0; i < numSegments; i++) {
-			data.indices.push_back(sideStart + i);
-			data.indices.push_back(poleStart + i); // Pole
-			data.indices.push_back(sideStart + i + 1);
-		}
-
 		int columns = numSegments + 1;
 		//Skip top and bottom poles
 		for (int row = 1; row < numSegments - 1; row++) {
@@ -54,6 +45,15 @@ namespace rbLib {
 				data.indices.push_back(start + 1);
 				data.indices.push_back(start + columns + 1);
 			}
+		}
+
+		//Bottom Face
+		poleStart = data.vertices.size() - numSegments; //Index of first pole vertex
+		sideStart = poleStart - numSegments - 1;
+		for (size_t i = 0; i < numSegments; i++) {
+			data.indices.push_back(sideStart + i + 1);
+			data.indices.push_back(poleStart + i); // Pole
+			data.indices.push_back(sideStart + i);
 		}
 
 		return data;
@@ -112,7 +112,7 @@ namespace rbLib {
 		float center = 0;
 
 		//Top face
-		for(int i = 0; i <= numSegments; i++) {
+		for(int i = 0; i < numSegments; i++) {
 			data.indices.push_back(start + i);
 			data.indices.push_back(center);
 			data.indices.push_back(start + i + 1);
@@ -139,9 +139,9 @@ namespace rbLib {
 		center = data.vertices.size() - 1;
 
 		for (int i = 0; i <= numSegments; i++) {
-			data.indices.push_back(start + i);
-			data.indices.push_back(center);
 			data.indices.push_back(start + i + 1);
+			data.indices.push_back(center);
+			data.indices.push_back(start + i);
 		}
 
 		return data;
