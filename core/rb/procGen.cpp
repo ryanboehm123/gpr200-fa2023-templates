@@ -18,6 +18,8 @@ namespace rbLib {
 				v.pos.y = radius * cos(phi);
 				v.pos.z = radius * sin(phi) * sin(theta);
 				v.normal = ew::Normalize(v.pos - ew::Vec3{0, 1, 0});
+				v.uv.x = atan2(v.normal.x, v.normal.z) / (2 * ew::PI) + 0.5;
+				v.uv.y = v.normal.y * 0.5 + 0.5;
 				data.vertices.push_back(v);
 			}
 		}
@@ -51,7 +53,7 @@ namespace rbLib {
 
 		//Bottom Face
 		poleStart = data.vertices.size() - numSegments; //Index of first pole vertex
-		sideStart = poleStart - numSegments - 1;
+		sideStart = poleStart - numSegments - 2;
 		for (size_t i = 0; i < numSegments; i++) {
 			data.indices.push_back(sideStart + i + 1);
 			data.indices.push_back(poleStart + i); // Pole
@@ -72,7 +74,6 @@ namespace rbLib {
 		//Top center
 		v.pos = {0,topY,0};
 		v.normal = { 0, 1, 0 };
-		//v.uv = { 0, 1 };
 		data.vertices.push_back(v);
 
 		//Top ring (top face)
@@ -82,8 +83,6 @@ namespace rbLib {
 			v.pos.z = sin(theta) * radius;
 			v.pos.y = topY;
 			v.normal = { 0, 1, 0 };
-			//v.uv.x = cos(theta) / thetaStep;
-			//v.uv.y = sin(theta) / thetaStep;
 			data.vertices.push_back(v);
 		}
 
@@ -96,8 +95,6 @@ namespace rbLib {
 			v.normal.x = cos(theta);
 			v.normal.y = 0;
 			v.normal.z = sin(theta);
-			//v.uv.x = cos(theta) / thetaStep;
-			//v.uv.y = sin(theta) / thetaStep;
 			data.vertices.push_back(v);
 		}
 
@@ -110,8 +107,6 @@ namespace rbLib {
 			v.normal.x = cos(theta);
 			v.normal.y = 0;
 			v.normal.z = sin(theta);
-			//v.uv.x = cos(theta) / thetaStep;
-			//v.uv.y = sin(theta) / thetaStep;
 			data.vertices.push_back(v);
 		}
 
@@ -122,8 +117,6 @@ namespace rbLib {
 			v.pos.z = sin(theta) * radius;
 			v.pos.y = bottomY;
 			v.normal = { 0, -1, 0 };
-			//v.uv.x = cos(theta) / thetaStep;
-			//v.uv.y = sin(theta) / thetaStep;
 			data.vertices.push_back(v);
 		}
 
