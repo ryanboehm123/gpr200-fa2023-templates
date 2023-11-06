@@ -74,6 +74,7 @@ namespace rbLib {
 		//Top center
 		v.pos = {0,topY,0};
 		v.normal = { 0, 1, 0 };
+		v.uv = { 0.5, 0.5 };
 		data.vertices.push_back(v);
 
 		//Top ring (top face)
@@ -83,6 +84,8 @@ namespace rbLib {
 			v.pos.z = sin(theta) * radius;
 			v.pos.y = topY;
 			v.normal = { 0, 1, 0 };
+			v.uv.x = cos(theta) / 2 + 0.5;
+			v.uv.y = sin(theta) / 2 + 0.5;
 			data.vertices.push_back(v);
 		}
 
@@ -95,6 +98,8 @@ namespace rbLib {
 			v.normal.x = cos(theta);
 			v.normal.y = 0;
 			v.normal.z = sin(theta);
+			//v.uv.x = cos(theta) / 2 + 0.5;
+			//v.uv.y = sin(theta) / 2 + 0.5;
 			data.vertices.push_back(v);
 		}
 
@@ -107,6 +112,8 @@ namespace rbLib {
 			v.normal.x = cos(theta);
 			v.normal.y = 0;
 			v.normal.z = sin(theta);
+			//v.uv.x = cos(theta) / 2 + 0.5;
+			//v.uv.y = sin(theta) / 2 + 0.5;
 			data.vertices.push_back(v);
 		}
 
@@ -117,13 +124,15 @@ namespace rbLib {
 			v.pos.z = sin(theta) * radius;
 			v.pos.y = bottomY;
 			v.normal = { 0, -1, 0 };
+			v.uv.x = cos(theta) / 2 + 0.5;
+			v.uv.y = sin(theta) / 2 + 0.5;
 			data.vertices.push_back(v);
 		}
 
 		//Bottom center
 		v.pos = { 0,bottomY,0 };
 		v.normal = { 0, -1, 0 };
-		//v.uv = { 0, 1 };
+		v.uv = { 0.5, 0.5 };
 		data.vertices.push_back(v);
 
 		//Indices

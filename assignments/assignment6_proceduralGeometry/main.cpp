@@ -89,7 +89,7 @@ int main() {
 	ew::Mesh planeMesh(planeMeshData);
 
 	//Create cylinder
-	ew::MeshData cylinderMeshData = rbLib::createCylinder(5, 2, 8);
+	ew::MeshData cylinderMeshData = rbLib::createCylinder(5, 2, 32);
 	ew::Mesh cylinderMesh(cylinderMeshData);
 
 	//Create sphere
