@@ -14,12 +14,12 @@ namespace rbLib {
 			float phi = row * phiStep;
 			for (int col = 0; col <= numSegments; col++) { //Duplicate column for each row
 				float theta = col * thetaStep;
-				v.pos.x = radius * sin(phi) * cos(theta);
+				v.pos.x = radius * cos(theta) * sin(phi);
 				v.pos.y = radius * cos(phi);
-				v.pos.z = radius * sin(phi) * sin(theta);
+				v.pos.z = radius * sin(theta) * sin(phi);
 				v.normal = ew::Normalize(v.pos - ew::Vec3{0, 1, 0});
-				v.uv.x = atan2(v.normal.x, v.normal.z) / (2 * ew::PI) + 0.5;
-				v.uv.y = v.normal.y * 0.5 + 0.5;
+				v.uv.x = (float)col / numSegments;
+				v.uv.y = (float)row / numSegments;
 				data.vertices.push_back(v);
 			}
 		}
@@ -98,8 +98,8 @@ namespace rbLib {
 			v.normal.x = cos(theta);
 			v.normal.y = 0;
 			v.normal.z = sin(theta);
-			//v.uv.x = cos(theta) / 2 + 0.5;
-			//v.uv.y = sin(theta) / 2 + 0.5;
+			v.uv.x = cos(theta / 2) / 2 + 0.5;
+			v.uv.y = 1;
 			data.vertices.push_back(v);
 		}
 
@@ -112,8 +112,8 @@ namespace rbLib {
 			v.normal.x = cos(theta);
 			v.normal.y = 0;
 			v.normal.z = sin(theta);
-			//v.uv.x = cos(theta) / 2 + 0.5;
-			//v.uv.y = sin(theta) / 2 + 0.5;
+			v.uv.x = cos(theta / 2) / 2 + 0.5;
+			v.uv.y = 0;
 			data.vertices.push_back(v);
 		}
 
