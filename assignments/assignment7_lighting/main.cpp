@@ -32,6 +32,7 @@ struct Material {
 
 int SCREEN_WIDTH = 1080;
 int SCREEN_HEIGHT = 720;
+const int MAX_LIGHTS = 4;
 
 float prevTime;
 ew::Vec3 bgColor = ew::Vec3(0.1f);
@@ -123,7 +124,17 @@ int main() {
 		shader.setMat4("_Model", cylinderTransform.getModelMatrix());
 		cylinderMesh.draw();
 
-		//TODO: Render point lights
+		//Create light objects
+		Light lights[MAX_LIGHTS];
+
+		shader.setVec3("_Lights[0].position", lights[0].position);
+		shader.setVec3("_Lights[0].color", lights[0].color);
+		shader.setVec3("_Lights[1].position", lights[1].position);
+		shader.setVec3("_Lights[1].color", lights[1].color);
+		shader.setVec3("_Lights[2].position", lights[2].position);
+		shader.setVec3("_Lights[2].color", lights[2].color);
+		shader.setVec3("_Lights[3].position", lights[3].position);
+		shader.setVec3("_Lights[3].color", lights[3].color);
 
 		//Render UI
 		{
