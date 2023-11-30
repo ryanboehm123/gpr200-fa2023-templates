@@ -99,13 +99,29 @@ int main() {
 	ew::Transform sphereTransform;
 	ew::Transform cylinderTransform;
 	ew::Transform lightTransform[MAX_LIGHTS];
+
 	planeTransform.position = ew::Vec3(0, -1.0, 0);
 	sphereTransform.position = ew::Vec3(-1.5f, 0.0f, 0.0f);
 	cylinderTransform.position = ew::Vec3(1.5f, 0.0f, 0.0f);
-	lightTransform[0].position = ew::Vec3(-2.0f, 0.0f, 3.0f);
-	lightTransform[1].position = ew::Vec3(0.0f, 0.0f, 5.0f);
-	lightTransform[2].position = ew::Vec3(2.0f, 0.0f, 3.0f);
-	lightTransform[3].position = ew::Vec3(0.0f, 0.0f, 1.0f);
+
+	lightTransform[0].position = ew::Vec3(-2.0f, 0.0f, -5.0f);
+	lightTransform[1].position = ew::Vec3(0.0f, 0.0f, -7.0f);
+	lightTransform[2].position = ew::Vec3(2.0f, 0.0f, -5.0f);
+	lightTransform[3].position = ew::Vec3(0.0f, 0.0f, -3.0f);
+
+	//Create light objects
+	Light lights[MAX_LIGHTS];
+
+	//Set light variables
+	lights[0].position = lightTransform[0].position;
+	lights[1].position = lightTransform[1].position;
+	lights[2].position = lightTransform[2].position;
+	lights[3].position = lightTransform[3].position;
+
+	lights[0].color = ew::Vec3(1.0f, 0.0f, 0.0f);
+	lights[1].color = ew::Vec3(0.0f, 1.0f, 0.0f);
+	lights[2].color = ew::Vec3(0.0f, 0.0f, 1.0f);
+	lights[3].color = ew::Vec3(1.0f, 1.0f, 0.0f);
 
 	resetCamera(camera,cameraController);
 
@@ -144,37 +160,31 @@ int main() {
 		shader.setMat4("_Model", cylinderTransform.getModelMatrix());
 		cylinderMesh.draw();
 
-		//Create light objects
-		Light lights[MAX_LIGHTS];
-
-		//Set light variables
-		lights[0].position = lightTransform[0].position;
-		lights[1].position = lightTransform[1].position;
-		lights[2].position = lightTransform[2].position;
-		lights[3].position = lightTransform[3].position;
-
-		lights[0].color = ew::Vec3(1.0f, 0.0f, 0.0f);
-		lights[1].color = ew::Vec3(0.0f, 1.0f, 0.0f);
-		lights[2].color = ew::Vec3(0.0f, 0.0f, 1.0f);
-		lights[3].color = ew::Vec3(1.0f, 1.0f, 0.0f);
+		//Draw light spheres
+		unlitShader.use();
+		unlitShader.setMat4("_ViewProjection", camera.ProjectionMatrix() * camera.ViewMatrix());
 
 		shader.setVec3("_Lights[0].position", lights[0].position);
 		shader.setVec3("_Lights[0].color", lights[0].color);
-		shader.setVec3("_Lights[1].position", lights[1].position);
-		shader.setVec3("_Lights[1].color", lights[1].color);
-		shader.setVec3("_Lights[2].position", lights[2].position);
-		shader.setVec3("_Lights[2].color", lights[2].color);
-		shader.setVec3("_Lights[3].position", lights[3].position);
-		shader.setVec3("_Lights[3].color", lights[3].color);
-
-		//Draw light spheres
-		unlitShader.setMat4("_Model", sphereTransform.getModelMatrix());
+		unlitShader.setMat4("_Model", lightTransform[0].getModelMatrix());
 		unlitShader.setVec3("_Color", lights[0].color);
 		lightMesh.draw();
+
+		shader.setVec3("_Lights[1].position", lights[1].position);
+		shader.setVec3("_Lights[1].color", lights[1].color);
+		unlitShader.setMat4("_Model", lightTransform[1].getModelMatrix());
 		unlitShader.setVec3("_Color", lights[1].color);
 		lightMesh.draw();
+
+		shader.setVec3("_Lights[2].position", lights[2].position);
+		shader.setVec3("_Lights[2].color", lights[2].color);
+		unlitShader.setMat4("_Model", lightTransform[2].getModelMatrix());
 		unlitShader.setVec3("_Color", lights[2].color);
 		lightMesh.draw();
+
+		shader.setVec3("_Lights[3].position", lights[3].position);
+		shader.setVec3("_Lights[3].color", lights[3].color);
+		unlitShader.setMat4("_Model", lightTransform[3].getModelMatrix());
 		unlitShader.setVec3("_Color", lights[3].color);
 		lightMesh.draw();
 
